@@ -5,6 +5,7 @@
     font-family: 'Arial', sans-serif;
 }
 
+/* Body styling */
 body {
     background-color: #f4f6f9;
     color: #333;
@@ -12,6 +13,7 @@ body {
     padding: 50px;
 }
 
+/* Heading */
 h2 {
     font-size: 2rem;
     font-weight: bold;
@@ -19,12 +21,14 @@ h2 {
     margin-bottom: 20px;
 }
 
+/* Paragraph */
 p {
     font-size: 1.2rem;
     color: #555;
     margin-bottom: 30px;
 }
 
+/* Button Styling */
 button {
     background-color: #007bff;
     color: white;
@@ -53,6 +57,109 @@ button:hover {
 
     p {
         font-size: 1rem;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Global styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Body styling */
+body {
+    background-color: #f4f6f9;
+    color: #333;
+    text-align: center;
+    padding: 50px;
+}
+
+/* Form Container */
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading */
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #004aad;
+    margin-bottom: 20px;
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Label styling */
+label {
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+
+/* Input styling */
+input[type="number"],
+input[type="radio"] {
+    padding: 8px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input[type="number"]:focus,
+input[type="radio"]:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+/* Button Styling */
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .form-container {
+        padding: 20px;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
     }
 
     button {
