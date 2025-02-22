@@ -6,6 +6,8 @@ import yfinance as yf
 from textblob import TextBlob
 import tweepy
 import warnings
+import seaborn as sns
+
 warnings.filterwarnings('ignore')
 
 class AssetAllocationML:
@@ -14,7 +16,8 @@ class AssetAllocationML:
             'stocks': {'risk': 0.8, 'min_conservative': 0.2, 'max_aggressive': 0.8},
             'bonds': {'risk': 0.4, 'min_conservative': 0.3, 'max_aggressive': 0.2},
             'commodities': {'risk': 0.7, 'min_conservative': 0.1, 'max_aggressive': 0.2},
-            'cash': {'risk': 0.1, 'min_conservative': 0.2, 'max_aggressive': 0.0}
+            'cash': {'risk': 0.1, 'min_conservative': 0.2, 'max_aggressive': 0.0},
+            'crypto': {'risk': 0.9, 'min_conservative': 0.0, 'max_aggressive': 0.6}
         }
         
     def get_macro_indicators(self):
@@ -46,7 +49,8 @@ class AssetAllocationML:
             'stocks': 0.6,
             'bonds': 0.5,
             'commodities': 0.4,
-            'cash': 0.3
+            'cash': 0.3,
+            'crypto': 0.2
         }
         return base_sentiments.get(asset_type, 0.5)
 
@@ -56,7 +60,8 @@ class AssetAllocationML:
             'stocks': 0.10,
             'bonds': 0.05,
             'commodities': 0.07,
-            'cash': 0.02
+            'cash': 0.02,
+            'crypto': 0.4
         }
         
         # Adjust returns based on macro indicators
@@ -82,10 +87,11 @@ class AssetAllocationML:
         
         # Simple covariance matrix (can be enhanced with historical data)
         cov_matrix = np.array([
-            [0.04, 0.02, 0.01, 0.0],
-            [0.02, 0.02, 0.01, 0.0],
-            [0.01, 0.01, 0.03, 0.0],
-            [0.0, 0.0, 0.0, 0.001]
+            [0.04, 0.02, 0.01, 0.0, 1],
+            [0.02, 0.02, 0.01, 0.0, 1],
+            [0.01, 0.01, 0.03, 0.0, 1],
+            [0.0, 0.0, 0.0, 0.001, 1],
+            [0.0, 0.0, 0.0, 0.001, 1]
         ])
 
         def portfolio_stats(weights):
@@ -143,7 +149,7 @@ def calculate_allocation(budget, risk_tolerance):
 if __name__ == "__main__":
     # Example usage
     budget = 10000
-    risk_tolerance = 5  # Scale of 1-10
+    risk_tolerance = 2 # Scale of 1-10
     
     allocation, predicted_returns = calculate_allocation(budget, risk_tolerance)
     
@@ -154,3 +160,5 @@ if __name__ == "__main__":
     print("\nRecommended Allocation:")
     for asset, amount in allocation.items():
         print(f"{asset}: ${amount:.2f}")
+    
+    

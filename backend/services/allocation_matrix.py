@@ -49,5 +49,5 @@ def get_allocation(budget, risk_tolerance):
 if __name__ == "__main__":
     # Example usage
     budget = 10000
-    risk_tolerance = 5  # Scale of 1-10
+    risk_tolerance = 2 # Scale of 1-10
     allocation, _ = get_allocation(budget, risk_tolerance)

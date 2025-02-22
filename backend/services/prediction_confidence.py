@@ -15,6 +15,7 @@ def get_market_confidence():
     aapl_file = os.path.join(sp500_csv_dir, "AAPL.csv")
     df = pd.read_csv(aapl_file)
 
+
     # Convert 'Date' column to datetime with correct format
     df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
 
@@ -27,7 +28,7 @@ def get_market_confidence():
 
     # Normalize confidence score
     confidence = 1 + (rolling_avg * 10)
-    return max(confidence, 0.5)  # Ensure it doesn't go too low
+    return max(confidence, 0.5),     df.head()  # Ensure it doesn't go too low
 
 def get_top_stocks():
     """
@@ -56,3 +57,5 @@ def get_top_stocks():
     top_stocks = sorted(stock_performance, key=stock_performance.get, reverse=True)[:5]
 
     return top_stocks
+if __name__ == "__main__":
+    print(get_market_confidence)
