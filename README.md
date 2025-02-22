@@ -1,82 +1,61 @@
-Dynamic Asset Allocation Strategy
+# Dynamic Asset Allocation System
 
-Overview
+## Overview
+This project implements a **hybrid asset allocation strategy** that leverages **machine learning** for stock selection while using **linear algebra** and **macroeconomic/sentiment data** for broader asset class allocation.
 
-This project implements a dynamic asset allocation strategy that adjusts portfolio weights based on market conditions, risk tolerance, and expected returns. The approach uses a combination of Machine Learning (ML) for stock weight predictions, macroeconomic indicators for adjusting bond and commodity allocations, and a linear algebra-based method to determine category weight distributions.
+## Key Components
+1. **Stock Selection (ML-Based)**
+   - Predicts future returns using an ML model (Random Forest, XGBoost, etc.)
+   - Adjusts risk profile based on user selection (e.g., high risk prefers high return stocks)
+   - Allocates stock weights dynamically based on ML predictions
 
-Process Breakdown
+2. **Category Allocation (Linear Algebra-Based)**
+   - Stocks, bonds, cash, commodities have static base weights
+   - Adjustments based on macroeconomic or sentiment indicators
+   - Linear algebra method optimizes the category-level distribution
 
-Market Conditions Analysis
+3. **Risk-Based Adjustments**
+   - **High Risk** → More aggressive stocks, above the efficient frontier
+   - **Medium/Low Risk** → Balanced mix with more stable assets
 
-Uses indicators like VIX (Volatility Index), GDP growth, and yield spread to adjust sector weights dynamically.
+## Mathematical Formulation
+### Stock Weights Calculation (ML-Based)
+Let:
+- \( X \) be a feature matrix of historical stock data
+- \( Y \) be the target return vector
+- \( f(X) \) be the trained ML model predicting expected return
 
-Defensive sectors (e.g., healthcare, consumer staples) increase allocation in times of economic downturns.
+The weight for each stock \( w_i \) is calculated as:
+\[ w_i = \frac{f(X_i)}{\sum_{j} f(X_j)} \]
 
-Stock Selection via Machine Learning
+### Asset Category Allocation (Linear Algebra)
+Given:
+- **Risk tolerance factor** \( R \) (high = 1, medium = 0.5, low = 0.2)
+- **Macroeconomic factor** \( M \) (scaled value from economic indicators)
+- **Static base weights** \( W_0 \) for categories \( C \)
 
-Stocks are ranked using momentum and volatility metrics.
+Final category weight adjustment:
+\[ W_C = W_0 + (M \times R) \]
 
-Weights are assigned based on normalized momentum scores.
+## Roadmap
+1. **Train ML Model** for stock return prediction
+2. **Develop Linear Algebra Model** for category allocation
+3. **Integrate Macroeconomic Data** for dynamic category adjustments
+4. **Build User Interface** for risk-based portfolio customization
+5. **Backtest Strategy** on historical market data
+6. **Optimize and Deploy**
 
-Category Allocation via Linear Algebra
+## Installation
+```bash
+pip install -r requirements.txt
+```
 
-Determines weights for stocks, bonds, cash, and commodities using a structured matrix-based approach.
+## Running the Model
+```bash
+python main.py
+```
 
-Risk tolerance affects the proportion allocated to stocks vs. more stable assets.
-
-Risk-Based Return Adjustment
-
-If high risk tolerance is selected, stocks are adjusted slightly above the efficient frontier to target higher returns.
-
-Adjusts expected return by an alpha parameter based on risk preference.
-
-Mathematical Formulation
-
-1. Stock Weights
-
-Stock weight, , is calculated as:
-
-
-
-where  is the scaled momentum score for each stock.
-
-2. Category Allocation
-
-Category weight vector, , is obtained via:
-
-
-
-where:
-
- represents the category constraint matrix.
-
- is the total available investment budget.
-
-3. Adjusted Return Target
-
-For high-risk users:
-
-
-
-where:
-
- is the adjusted target return.
-
- is the efficient frontier return.
-
- is an adjustment factor (+0.02 for high risk, -0.01 for low risk).
-
-Roadmap
-
-Phase 1: Implement base ML model for stock selection (Done ✅)
-
-Phase 2: Enhance macroeconomic integration for asset category weighting (In Progress 🛠️)
-
-Phase 3: Optimize risk-adjusted return calculation
-
-Phase 4: Backtest and refine the dynamic allocation model
-
-Conclusion
-
-This strategy provides a flexible approach to asset allocation, balancing data-driven insights with user-defined risk preferences. The combination of ML, macroeconomic analysis, and structured allocation methods ensures adaptability to different market conditions.
-
+## Future Enhancements
+- Improve ML model accuracy with additional financial indicators
+- Implement real-time macroeconomic data integration
+- Add reinforcement learning for adaptive portfolio rebalancing
