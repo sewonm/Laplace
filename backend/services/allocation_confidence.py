@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import json
-from prediction import get_market_confidence, get_top_stocks
+from backend.services.prediction_confidence import get_market_confidence, get_top_stocks
 
 # Load user risk level (retrieved from some other file)
 # with open("user_data.json", "r") as f:
