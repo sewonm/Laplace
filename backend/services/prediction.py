@@ -1,73 +1,58 @@
 import kagglehub
 import os
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sb
 
 # Download dataset
 path = kagglehub.dataset_download("paultimothymooney/stock-market-data")
-print("Path to dataset files:", path)
 sp500_csv_dir = os.path.join(path, "stock_market_data", "sp500", "csv")
 
-stocks_file = os.path.join(sp500_csv_dir, "BMY.csv")
-df = pd.read_csv(stocks_file)
-print("Loaded dataset from:", stocks_file)
-print(df.head())
+def get_market_confidence():
+    """
+    Computes a market confidence score based on historical stock market performance.
+    Confidence >1 indicates a strong market; <1 indicates a weak market.
+    """
+    # Load Apple (AAPL) stock data
+    aapl_file = os.path.join(sp500_csv_dir, "AAPL.csv")
+    df = pd.read_csv(aapl_file)
 
-print(df.describe())
+    # Convert 'Date' column to datetime with correct format
+    df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
 
-print(df.shape)
+    # Sort by date to ensure time order
+    df = df.sort_values(by="Date")
 
-print(df.info())
+    # Compute 30-day rolling average of daily returns using 'Adjusted Close'
+    df['Return'] = df['Adjusted Close'].pct_change(fill_method=None)  # FIX: No auto-fill for missing values
+    rolling_avg = df['Return'].rolling(window=30).mean().iloc[-1]
 
-# plt.figure(figsize=(15,5))
-# plt.plot(df['Close'])
-# plt.title('BMY Close price.', fontsize=15)
-# plt.ylabel('Price in dollars.')
-# plt.show()
+    # Normalize confidence score
+    confidence = 1 + (rolling_avg * 10)
+    return max(confidence, 0.5)  # Ensure it doesn't go too low
 
-df = df.drop(['Adjusted Close'], axis=1)
-df.isnull().sum()
+def get_top_stocks():
+    """
+    Retrieves the top 5 stocks based on recent performance.
+    """
+    # Iterate through multiple stock files in the dataset directory
+    stock_files = [f for f in os.listdir(sp500_csv_dir) if f.endswith('.csv')]
 
-features = ['Open', 'High', 'Low', 'Close', 'Volume']
-plt.subplots(figsize=(20,10))
+    stock_performance = {}
 
-# df[df['Close'] == df['Adjusted Close']].shape
+    for file in stock_files:
+        stock_path = os.path.join(sp500_csv_dir, file)
+        df = pd.read_csv(stock_path)
 
-# for i, col in enumerate(features):
-#     plt.subplot(2,3, i+1)
-#     sb.distplot(df[col])
-# plt.show()
+        # Ensure 'Date' is parsed correctly with the correct format
+        df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
+        df = df.sort_values(by="Date")
 
-# plt.subplots(figsize=(10,8))
-# for i, col in enumerate(features):
-#   plt.subplot(2,3,i+1)
-#   sb.boxplot(df[col])
-# plt.show()
+        # Calculate recent 30-day return if enough data exists
+        if len(df) > 30 and 'Adjusted Close' in df.columns:
+            df['Return'] = df['Adjusted Close'].pct_change(fill_method=None)  # FIX: No auto-fill for missing values
+            last_30d_return = df['Return'].rolling(window=30).mean().iloc[-1]
+            stock_performance[file.replace(".csv", "")] = last_30d_return
 
-splitted = df['Date'].str.split('/', expand=True)
+    # Get the top 5 performing stocks
+    top_stocks = sorted(stock_performance, key=stock_performance.get, reverse=True)[:5]
 
-df['day'] = splitted[1].astype('int')
-df['month'] = splitted[0].astype('int')
-df['year'] = splitted[2].astype('int')
-
-df.head()
-
-
-
-# Define the correct subdirectory where the CSV files are located
-# sp500_csv_dir = os.path.join(path, "stock_market_data", "sp500", "csv")
-
-# # Check if the directory exists
-# if os.path.exists(sp500_csv_dir):
-#     # Look for Tesla's stock file (TSLA.csv)
-#     tsla_file = os.path.join(sp500_csv_dir, "BMY.csv")
-
-#     if os.path.exists(tsla_file):
-#         df = pd.read_csv(tsla_file)
-#         print("Loaded dataset from:", tsla_file)
-#         print(df.head())
-#     else:
-#         print("Tesla (BMY.csv) file not found in the dataset.")
-# else:
-#     print("S&P 500 CSV directory not found.")
+    return top_stocks
